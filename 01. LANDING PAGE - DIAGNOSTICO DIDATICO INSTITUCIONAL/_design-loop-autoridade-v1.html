@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Autoridade v1 — Diagnóstico Didático Institucional</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --ink: #14140f;
+        --ink-soft: #5a564c;
+        --paper: #f7f2e6;
+        --chalk: #fffdf7;
+        --stone: #e2dbca;
+        --highlight: #fbe36a;
+        --cobalt: #2454ff;
+        --cobalt-dark: #173aad;
+        --shadow-lift: 0 26px 60px rgba(20, 20, 15, 0.16);
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: var(--paper);
+        font-family: "Archivo", Arial, sans-serif;
+        font-size: 16px;
+        line-height: 1.5;
+      }
+
+      .section {
+        padding: clamp(72px, 8vw, 120px) clamp(16px, 4vw, 56px);
+      }
+
+      .inner {
+        width: min(1180px, 100%);
+        margin: 0 auto;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 24px;
+        color: var(--ink-soft);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow::before {
+        width: 16px;
+        height: 4px;
+        background: var(--ink-soft);
+        content: "";
+      }
+
+      .button {
+        display: inline-flex;
+        min-height: 52px;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        border: 1px solid transparent;
+        border-radius: 999px;
+        padding: 16px 28px;
+        font-weight: 800;
+        letter-spacing: -0.005em;
+        text-decoration: none;
+        color: #fff;
+        background: var(--cobalt);
+        box-shadow: 0 12px 24px rgba(36, 84, 255, 0.18);
+        cursor: pointer;
+        transition: transform 180ms ease, background 180ms ease, box-shadow 180ms ease;
+      }
+
+      .button:hover { transform: translateY(-2px); background: var(--cobalt-dark); }
+      .button:active { transform: translateY(0); box-shadow: none; }
+      .button:focus-visible {
+        outline: 3px solid rgba(36, 84, 255, 0.28);
+        outline-offset: 3px;
+      }
+
+      .authority {
+        display: grid;
+        grid-template-columns: minmax(240px, 0.62fr) minmax(0, 1fr);
+        gap: clamp(32px, 6vw, 72px);
+        align-items: center;
+      }
+
+      .portrait-frame {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid var(--stone);
+        border-radius: 28px;
+        background: var(--ink);
+        box-shadow: var(--shadow-lift);
+        aspect-ratio: 1 / 1.08;
+        opacity: 0;
+        transform: translateX(-16px);
+        transition: opacity 600ms cubic-bezier(0.16, 1, 0.3, 1), transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .portrait-frame.is-in-view {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      .portrait-frame img {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+        transform: scale(1.06);
+        transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .portrait-frame.is-in-view img {
+        transform: scale(1);
+      }
+
+      .authority-name {
+        margin: 0 0 20px;
+        font-family: "Fraunces", Georgia, serif;
+        font-size: 28px;
+        font-weight: 800;
+        opacity: 0;
+        transform: translateY(12px);
+        transition: opacity 500ms cubic-bezier(0.16, 1, 0.3, 1), transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .authority-name.is-in-view {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .stat-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 24px;
+        margin-bottom: 24px;
+        opacity: 0;
+        transform: translateY(12px);
+        transition: opacity 500ms cubic-bezier(0.16, 1, 0.3, 1), transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .stat-row.is-in-view {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .stat {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .stat strong {
+        font-family: "Fraunces", Georgia, serif;
+        font-size: 32px;
+        font-weight: 800;
+        color: var(--ink);
+        line-height: 1;
+      }
+
+      .stat span {
+        margin-top: 4px;
+        color: var(--ink-soft);
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+      }
+
+      .authority-copy p {
+        margin: 0 0 16px;
+        color: var(--ink-soft);
+        font-size: 18px;
+        opacity: 0;
+        transform: translateY(12px);
+        transition: opacity 500ms cubic-bezier(0.16, 1, 0.3, 1), transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .authority-copy p.is-in-view {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .authority-copy p:last-of-type {
+        margin-bottom: 0;
+      }
+
+      .authority-cta {
+        margin-top: 24px;
+        opacity: 0;
+        transform: translateY(12px);
+        transition: opacity 500ms cubic-bezier(0.16, 1, 0.3, 1), transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .authority-cta.is-in-view {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      @media (max-width: 980px) {
+        .authority {
+          grid-template-columns: 1fr;
+          text-align: center;
+        }
+
+        .authority .portrait-frame {
+          max-width: 320px;
+          margin: 0 auto;
+        }
+
+        .authority-copy {
+          text-align: left;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .portrait-frame,
+        .portrait-frame img,
+        .authority-name,
+        .stat-row,
+        .authority-copy p,
+        .authority-cta {
+          transition: none !important;
+          opacity: 1 !important;
+          transform: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <section class="section authority inner" id="autoridade" aria-labelledby="autoridade-title">
+      <div class="portrait-frame">
+        <img src="assets/paulo-tomazinho-foto-publica.webp" alt="Prof. Dr. Paulo Tomazinho segurando um modelo de cérebro colorido">
+      </div>
+      <div class="authority-copy">
+        <span class="eyebrow">Quem está por trás desta avaliação?</span>
+        <h2 id="autoridade-title" class="authority-name">Prof. Dr. Paulo Tomazinho</h2>
+        <div class="stat-row">
+          <div class="stat">
+            <strong>20+</strong>
+            <span>anos de experiência</span>
+          </div>
+          <div class="stat">
+            <strong>20 mil+</strong>
+            <span>professores formados</span>
+          </div>
+          <div class="stat">
+            <strong>Dr.</strong>
+            <span>Doutor em Educação</span>
+          </div>
+        </div>
+        <p>Há mais de 20 anos, Paulo Tomazinho atua na formação de professores com o objetivo de transformar o ensino em aprendizagem de verdade.</p>
+        <p>Doutor em Educação, pesquisador e formador docente, já contribuiu para o desenvolvimento de mais de 20 mil professores em escolas e redes de ensino pelo Brasil.</p>
+        <p>É fundador da Meta Aprendizagem, cofundador da Moonshot Educação, idealizador da Escola de Didática e <strong>Google Certified Innovator</strong>.</p>
+        <p>Seu trabalho une ciência da aprendizagem, didática e aplicação prática em sala de aula.</p>
+        <p>É essa experiência que está por trás deste diagnóstico, criado para entender a realidade da sua escola antes de indicar os próximos caminhos de formação.</p>
+        <div class="authority-cta">
+          <a class="button" href="#quiz">Quero fazer o diagnóstico</a>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      (function () {
+        var items = document.querySelectorAll(".portrait-frame, .authority-name, .stat-row, .authority-copy p, .authority-cta");
+        if (!items.length) return;
+
+        var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+        if (reduceMotion || !("IntersectionObserver" in window)) {
+          items.forEach(function (el) { el.classList.add("is-in-view"); });
+          return;
+        }
+
+        // Text items (name, stat row, paragraphs, CTA) cascade top-to-bottom;
+        // the portrait reveals on its own timing since it's a different
+        // mechanism (slide + image scale, not a text stagger).
+        var textItems = document.querySelectorAll(".authority-name, .stat-row, .authority-copy p, .authority-cta");
+        textItems.forEach(function (el, i) {
+          el.style.transitionDelay = (i * 90) + "ms";
+        });
+
+        var observer = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("is-in-view");
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.2, rootMargin: "0px 0px -40px 0px" }
+        );
+
+        items.forEach(function (el) { observer.observe(el); });
+      })();
+    </script>
+  </body>
+</html>

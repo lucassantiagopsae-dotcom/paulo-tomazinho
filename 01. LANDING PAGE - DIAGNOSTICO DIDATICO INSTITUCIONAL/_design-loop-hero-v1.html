@@ -1,0 +1,716 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hero v3 — Diagnóstico Didático Institucional</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --ink: #14140f;
+        --ink-soft: #5a564c;
+        --paper: #f7f2e6;
+        --chalk: #fffdf7;
+        --stone: #e2dbca;
+        --highlight: #fbe36a;
+        --cobalt: #2454ff;
+        --cobalt-dark: #173aad;
+        --cobalt-soft: rgba(36, 84, 255, 0.14);
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: var(--paper);
+        font-family: "Archivo", Arial, sans-serif;
+        font-size: 16px;
+        line-height: 1.5;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+        gap: clamp(32px, 5vw, 64px);
+        align-items: center;
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: clamp(56px, 8vw, 96px) clamp(20px, 4vw, 40px);
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 24px;
+        color: var(--ink-soft);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow::before {
+        width: 16px;
+        height: 4px;
+        background: var(--ink-soft);
+        content: "";
+      }
+
+      h1 {
+        margin: 0;
+        font-family: "Fraunces", Georgia, serif;
+        font-size: clamp(38px, 4.6vw, 60px);
+        font-weight: 800;
+        letter-spacing: -0.025em;
+        line-height: 1.03;
+      }
+
+      mark.hl {
+        padding: 0 0.14em;
+        background: var(--highlight);
+        color: var(--ink);
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
+      }
+
+      .hero-copy p {
+        max-width: 480px;
+        margin: 20px 0 0;
+        color: var(--ink-soft);
+        font-size: 18px;
+      }
+
+      .button {
+        display: inline-flex;
+        min-height: 52px;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        border: 1px solid transparent;
+        border-radius: 999px;
+        padding: 16px 28px;
+        font-weight: 800;
+        letter-spacing: -0.005em;
+        text-decoration: none;
+        color: #fff;
+        background: var(--cobalt);
+        box-shadow: 0 12px 24px rgba(36, 84, 255, 0.18);
+        cursor: pointer;
+        transition: transform 180ms ease, background 180ms ease, box-shadow 180ms ease;
+      }
+
+      .button:hover { transform: translateY(-2px); background: var(--cobalt-dark); }
+      .button:active { transform: translateY(0); box-shadow: none; }
+
+      .button:focus-visible,
+      .tab:focus-visible {
+        outline: 3px solid rgba(36, 84, 255, 0.28);
+        outline-offset: 3px;
+      }
+
+      .hero-actions { margin-top: 32px; }
+
+      /* ---- Showcase (illustrated mockup) ---- */
+
+      .showcase {
+        position: relative;
+      }
+
+      .blob {
+        position: absolute;
+        inset: -8%;
+        z-index: 0;
+        background:
+          radial-gradient(circle at 25% 20%, var(--cobalt-soft), transparent 55%),
+          radial-gradient(circle at 75% 75%, rgba(36, 84, 255, 0.16), transparent 60%),
+          var(--stone);
+        border-radius: 62% 38% 55% 45% / 48% 55% 45% 52%;
+        filter: blur(1px);
+        opacity: 0.9;
+      }
+
+      .showcase-tabs {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+
+      .tab {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: 1px solid var(--stone);
+        border-radius: 999px;
+        padding: 8px 16px 8px 8px;
+        background: var(--chalk);
+        color: var(--ink-soft);
+        font-family: "Archivo", Arial, sans-serif;
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: color 150ms cubic-bezier(0.4,0,0.2,1), background 150ms cubic-bezier(0.4,0,0.2,1), border-color 150ms cubic-bezier(0.4,0,0.2,1), opacity 150ms cubic-bezier(0.4,0,0.2,1);
+        opacity: 0.55;
+      }
+
+      .tab:hover {
+        opacity: 0.8;
+        border-color: var(--ink-soft);
+      }
+
+      .tab .num {
+        display: grid;
+        place-items: center;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: var(--stone);
+        color: var(--ink);
+        font-size: 12px;
+        font-family: "Fraunces", Georgia, serif;
+        font-weight: 700;
+      }
+
+      .tab[aria-selected="true"] {
+        opacity: 1;
+        color: var(--ink);
+        background: var(--chalk);
+        border-color: var(--cobalt);
+      }
+
+      .tab[aria-selected="true"]:hover {
+        opacity: 1;
+      }
+
+      .tab[aria-selected="true"] .num {
+        background: var(--cobalt);
+        color: var(--chalk);
+      }
+
+      .panel-frame {
+        position: relative;
+        z-index: 1;
+        height: 468px;
+        display: flex;
+        flex-direction: column;
+        border: 1px solid var(--stone);
+        border-radius: 32px;
+        background: var(--chalk);
+        box-shadow: 0 24px 56px -16px rgba(23, 58, 173, 0.2);
+        overflow: hidden;
+      }
+
+      /* Fake "app chrome" strip — makes the card below read as a captured
+         product screen rather than a floating text block. */
+      .chrome-bar {
+        flex: none;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px clamp(24px, 3vw, 36px);
+        border-bottom: 1px solid var(--stone);
+      }
+
+      .chrome-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--stone);
+      }
+
+      .chrome-url {
+        margin-left: 8px;
+        padding: 4px 12px;
+        border-radius: 999px;
+        background: var(--paper);
+        color: var(--ink-soft);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+      }
+
+      .panel-stage {
+        position: relative;
+        flex: 1;
+      }
+
+      /* All three panels are stacked on top of each other and cross-fade via
+         opacity/transform only — no display:none swap, so outgoing and
+         incoming panel animate at the same time instead of a hard cut. */
+      .panel {
+        position: absolute;
+        inset: 0;
+        padding: clamp(20px, 3vw, 32px) clamp(24px, 3vw, 36px);
+        opacity: 0;
+        transform: translateY(8px);
+        pointer-events: none;
+        transition: opacity 450ms ease-in-out, transform 450ms ease-in-out;
+      }
+
+      .panel.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+      }
+
+      .respondent {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 16px;
+        opacity: 0;
+        transition: opacity 280ms ease;
+      }
+
+      .panel.is-visible .respondent { opacity: 1; }
+
+      .respondent .avatar {
+        flex: none;
+        width: 32px;
+        height: 32px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        background: var(--cobalt);
+        color: var(--chalk);
+        font-family: "Fraunces", Georgia, serif;
+        font-weight: 700;
+        font-size: 13px;
+      }
+
+      .respondent strong {
+        display: block;
+        font-size: 13px;
+        line-height: 1.2;
+      }
+
+      .respondent span {
+        color: var(--ink-soft);
+        font-size: 12px;
+      }
+
+      .panel h3 {
+        margin: 0 0 20px;
+        font-family: "Fraunces", Georgia, serif;
+        font-size: 21px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        line-height: 1.25;
+        opacity: 0;
+        transform: translateY(6px);
+        transition: opacity 320ms ease, transform 320ms ease;
+      }
+
+      .panel.is-visible h3 {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .quiz-options {
+        display: grid;
+        gap: 12px;
+      }
+
+      .quiz-option {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border: 1px solid var(--stone);
+        border-radius: 16px;
+        padding: 16px;
+        font-weight: 700;
+        font-size: 15px;
+        background: var(--paper);
+        opacity: 0;
+        transform: translateY(6px);
+        transition: opacity 300ms ease, transform 300ms ease;
+      }
+
+      .panel.is-visible .quiz-option {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .panel.is-visible .quiz-option:nth-child(1) { transition-delay: 60ms; }
+      .panel.is-visible .quiz-option:nth-child(2) { transition-delay: 140ms; }
+      .panel.is-visible .quiz-option:nth-child(3) { transition-delay: 220ms; }
+
+      .quiz-option .dot {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        border: 1px solid var(--stone);
+        flex: none;
+      }
+
+      .quiz-option.picked {
+        border-color: var(--cobalt);
+        background: var(--cobalt-soft);
+      }
+
+      .quiz-option.picked .dot {
+        border-color: var(--cobalt);
+        background: var(--cobalt);
+      }
+
+      .theme-reveal {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        border: 1px solid var(--stone);
+        border-radius: 20px;
+        padding: 20px;
+        background: var(--paper);
+        margin-bottom: 12px;
+        opacity: 0;
+        transform: translateY(6px);
+        transition: opacity 320ms ease, transform 320ms ease;
+        transition-delay: 60ms;
+      }
+
+      .panel.is-visible .theme-reveal {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .theme-reveal .mark {
+        flex: none;
+        width: 44px;
+        height: 44px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        background: var(--highlight);
+        color: var(--ink);
+        font-family: "Fraunces", Georgia, serif;
+        font-weight: 700;
+        font-size: 18px;
+      }
+
+      .theme-reveal strong { display: block; font-size: 18px; }
+      .theme-reveal span { color: var(--ink-soft); font-size: 14px; }
+
+      .signal-bars {
+        flex: none;
+        display: flex;
+        align-items: flex-end;
+        gap: 4px;
+        height: 24px;
+        margin-left: auto;
+      }
+
+      .signal-bars span {
+        width: 4px;
+        border-radius: 999px;
+        background: var(--stone);
+      }
+
+      .signal-bars span:nth-child(1) { height: 35%; }
+      .signal-bars span:nth-child(2) { height: 60%; }
+      .signal-bars span:nth-child(3) { height: 85%; }
+      .signal-bars span:nth-child(4) { height: 100%; background: var(--cobalt); }
+
+      .compare-bars {
+        display: grid;
+        gap: 12px;
+        margin-top: 20px;
+        opacity: 0;
+        transition: opacity 280ms ease;
+        transition-delay: 260ms;
+      }
+
+      .panel.is-visible .compare-bars { opacity: 1; }
+
+      .compare-row {
+        display: grid;
+        grid-template-columns: 116px 1fr;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .compare-label {
+        color: var(--ink-soft);
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .compare-track {
+        height: 8px;
+        border-radius: 999px;
+        background: var(--stone);
+        overflow: hidden;
+      }
+
+      .compare-fill {
+        height: 100%;
+        width: 0;
+        border-radius: 999px;
+        background: var(--ink-soft);
+        transition: width 700ms ease-in-out;
+        transition-delay: 320ms;
+      }
+
+      .panel.is-visible .compare-fill { width: var(--w); }
+
+      .progress-track {
+        height: 8px;
+        border-radius: 999px;
+        background: var(--stone);
+        overflow: hidden;
+        margin-bottom: 20px;
+      }
+
+      .progress-fill {
+        height: 100%;
+        width: 0%;
+        border-radius: 999px;
+        background: var(--cobalt);
+        transition: width 900ms ease-in-out;
+      }
+
+      .panel.is-visible .progress-fill {
+        width: 100%;
+      }
+
+      .rank-list {
+        display: grid;
+        gap: 8px;
+        margin-bottom: 20px;
+      }
+
+      .rank-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border: 1px solid var(--stone);
+        border-radius: 16px;
+        padding: 12px 16px;
+        background: var(--paper);
+        color: var(--ink-soft);
+        font-size: 14px;
+        font-weight: 700;
+        opacity: 0;
+        transform: translateY(6px);
+        transition: opacity 320ms ease, transform 320ms ease;
+      }
+
+      .rank-item .pos {
+        flex: none;
+        width: 24px;
+        height: 24px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        background: var(--stone);
+        color: var(--ink);
+        font-family: "Fraunces", Georgia, serif;
+        font-weight: 700;
+        font-size: 12px;
+      }
+
+      .rank-item--top {
+        border-color: var(--cobalt);
+        background: var(--cobalt-soft);
+        color: var(--ink);
+      }
+
+      .rank-item--top .pos {
+        background: var(--cobalt);
+        color: var(--chalk);
+      }
+
+      .panel.is-visible .rank-item {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .panel.is-visible .rank-item:nth-child(1) { transition-delay: 100ms; }
+      .panel.is-visible .rank-item:nth-child(2) { transition-delay: 180ms; }
+      .panel.is-visible .rank-item:nth-child(3) { transition-delay: 260ms; }
+
+      .result-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        border-radius: 999px;
+        padding: 12px 20px;
+        background: var(--ink);
+        color: var(--chalk);
+        font-weight: 800;
+        font-size: 14px;
+        opacity: 0;
+        transform: scale(0.92);
+        transition: opacity 320ms ease 460ms, transform 320ms ease 460ms;
+      }
+
+      .panel.is-visible .result-chip {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      .result-chip .icon {
+        flex: none;
+        width: 16px;
+        height: 16px;
+        display: grid;
+        place-items: center;
+      }
+
+      @media (max-width: 860px) {
+        .hero { grid-template-columns: 1fr; text-align: center; }
+        .hero-copy p { margin-left: auto; margin-right: auto; }
+        .showcase-tabs { flex-wrap: wrap; }
+        .panel-frame { height: 508px; }
+        .respondent { justify-content: center; }
+      }
+
+      @media (max-width: 480px) {
+        .panel-frame { height: 548px; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * { transition: none !important; }
+      }
+    </style>
+  </head>
+  <body>
+    <section class="hero">
+      <div class="hero-copy">
+        <span class="eyebrow">Diagnóstico gratuito</span>
+        <h1>Descubra em poucos minutos qual <mark class="hl">formação</mark> sua equipe docente mais precisa</h1>
+        <p>Responda algumas perguntas sobre sua equipe e saiba quais temas podem gerar mais impacto na prática pedagógica.</p>
+        <div class="hero-actions">
+          <a class="button" href="#quiz">Fazer diagnóstico gratuito</a>
+        </div>
+      </div>
+
+      <div class="showcase">
+        <div class="blob" aria-hidden="true"></div>
+
+        <div class="showcase-tabs" role="tablist" aria-label="Como o diagnóstico funciona">
+          <button class="tab" role="tab" aria-selected="true" data-panel="p1"><span class="num">1</span> Pergunta</button>
+          <button class="tab" role="tab" aria-selected="false" data-panel="p2"><span class="num">2</span> Tema identificado</button>
+          <button class="tab" role="tab" aria-selected="false" data-panel="p3"><span class="num">3</span> Resultado</button>
+        </div>
+
+        <div class="panel-frame">
+          <div class="chrome-bar" aria-hidden="true">
+            <span class="chrome-dot"></span><span class="chrome-dot"></span><span class="chrome-dot"></span>
+            <span class="chrome-url">diagnostico.paulotomazinho.com.br</span>
+          </div>
+
+          <div class="panel-stage">
+            <div class="panel is-visible" id="p1">
+              <div class="respondent">
+                <span class="avatar">CP</span>
+                <div>
+                  <strong>Coordenação Pedagógica</strong>
+                  <span>respondendo agora</span>
+                </div>
+              </div>
+              <h3>Professores participam de formações, mas têm dificuldade de aplicar na prática?</h3>
+              <div class="quiz-options">
+                <div class="quiz-option">
+                  <span class="dot"></span> Nunca acontece
+                </div>
+                <div class="quiz-option picked">
+                  <span class="dot"></span> Acontece com frequência
+                </div>
+                <div class="quiz-option">
+                  <span class="dot"></span> Não sei avaliar
+                </div>
+              </div>
+            </div>
+
+            <div class="panel" id="p2">
+              <h3>O diagnóstico cruza os sinais e aponta onde focar primeiro.</h3>
+              <div class="theme-reveal">
+                <span class="mark" aria-hidden="true">
+                  <svg viewBox="0 0 20 20" width="18" height="18" fill="none"><path d="M3 10.5L7.2 14.5L17 4.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+                <div>
+                  <strong>Metodologias Ativas</strong>
+                  <span>Sinal mais forte identificado na sua equipe</span>
+                </div>
+                <div class="signal-bars" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+              </div>
+              <div class="compare-bars" aria-hidden="true">
+                <div class="compare-row">
+                  <span class="compare-label">Tecnologias Educacionais/IA</span>
+                  <div class="compare-track"><div class="compare-fill" style="--w:64%"></div></div>
+                </div>
+                <div class="compare-row">
+                  <span class="compare-label">Formação Docente</span>
+                  <div class="compare-track"><div class="compare-fill" style="--w:52%"></div></div>
+                </div>
+                <div class="compare-row">
+                  <span class="compare-label">Didática Assimétrica</span>
+                  <div class="compare-track"><div class="compare-fill" style="--w:38%"></div></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel" id="p3">
+              <h3>Sua equipe recebe a prioridade de desenvolvimento docente.</h3>
+              <div class="progress-track"><div class="progress-fill"></div></div>
+              <div class="rank-list">
+                <div class="rank-item rank-item--top"><span class="pos">1º</span> Metodologias Ativas</div>
+                <div class="rank-item"><span class="pos">2º</span> Tecnologias Educacionais/IA</div>
+                <div class="rank-item"><span class="pos">3º</span> Formação Docente</div>
+              </div>
+              <div class="result-chip">
+                <svg class="icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.5L6.2 11.5L13 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Diagnóstico concluído
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      (function () {
+        var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab'));
+        var panels = {};
+        document.querySelectorAll('.panel').forEach(function (p) { panels[p.id] = p; });
+
+        function activate(tab) {
+          tabs.forEach(function (t) { t.setAttribute('aria-selected', String(t === tab)); });
+          var targetId = tab.getAttribute('data-panel');
+          Object.keys(panels).forEach(function (id) {
+            panels[id].classList.toggle('is-visible', id === targetId);
+          });
+        }
+
+        var autoTimer = null;
+        function stopAuto() {
+          if (autoTimer) { clearInterval(autoTimer); autoTimer = null; }
+        }
+
+        tabs.forEach(function (tab) {
+          tab.addEventListener('click', function () {
+            stopAuto();
+            activate(tab);
+          });
+        });
+
+        // Auto-advance once, lightly, to show the mechanism without being asked.
+        // Stops immediately on any manual interaction (see stopAuto above).
+        var order = ['p1', 'p2', 'p3'];
+        var idx = 0;
+        autoTimer = setInterval(function () {
+          idx = (idx + 1) % order.length;
+          var nextTab = tabs.find(function (t) { return t.getAttribute('data-panel') === order[idx]; });
+          activate(nextTab);
+          if (idx === order.length - 1) { stopAuto(); }
+        }, 3200);
+      })();
+    </script>
+  </body>
+</html>

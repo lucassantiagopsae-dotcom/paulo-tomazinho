@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dor v1 — Diagnóstico Didático Institucional</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --ink: #14140f;
+        --ink-soft: #5a564c;
+        --paper: #f7f2e6;
+        --chalk: #fffdf7;
+        --stone: #e2dbca;
+        --highlight: #fbe36a;
+        --cobalt: #2454ff;
+        --cobalt-dark: #173aad;
+        --cobalt-soft: rgba(36, 84, 255, 0.14);
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: var(--paper);
+        font-family: "Archivo", Arial, sans-serif;
+        font-size: 16px;
+        line-height: 1.5;
+      }
+
+      .section {
+        padding: clamp(72px, 8vw, 120px) clamp(16px, 4vw, 56px);
+      }
+
+      h2 {
+        margin: 0;
+        max-width: 820px;
+        font-family: "Fraunces", Georgia, serif;
+        font-size: clamp(34px, 5vw, 52px);
+        font-weight: 700;
+        letter-spacing: -0.015em;
+        line-height: 1.05;
+      }
+
+      .dor-block {
+        max-width: 820px;
+        margin: 0 auto;
+        text-align: center;
+      }
+
+      .signal-list {
+        display: grid;
+        gap: 12px;
+        max-width: 720px;
+        margin: 32px auto 0;
+        padding: 0;
+        list-style: none;
+        text-align: left;
+      }
+
+      .signal-item {
+        display: grid;
+        grid-template-columns: 40px 1fr;
+        gap: 16px;
+        align-items: start;
+        border: 1px solid var(--stone);
+        padding: 20px 16px;
+        border-radius: 12px;
+        font-size: 18px;
+        font-weight: 700;
+        opacity: 0;
+        transform: translateY(16px);
+        transition: opacity 500ms ease, transform 500ms ease, background 200ms ease, border-color 200ms ease;
+        cursor: default;
+      }
+
+      .signal-item:hover {
+        background: var(--chalk);
+        border-color: var(--ink-soft);
+      }
+
+      .signal-item.is-in-view {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .signal-item .mark {
+        display: grid;
+        place-items: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--stone);
+      }
+
+      .signal-item .mark::before {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--ink-soft);
+        content: "";
+      }
+
+      .dor-closing {
+        max-width: 700px;
+        margin: 32px auto 0;
+        color: var(--ink-soft);
+        font-size: 18px;
+        opacity: 0;
+        transform: translateY(12px);
+        transition: opacity 500ms ease, transform 500ms ease;
+      }
+
+      .dor-closing.is-in-view {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .signal-item,
+        .dor-closing {
+          transition: none !important;
+          opacity: 1 !important;
+          transform: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <section class="section" id="dor" aria-labelledby="dor-title">
+      <div class="dor-block">
+        <h2 id="dor-title">Seus professores se esforçam, mas alguns problemas continuam se repetindo?</h2>
+        <ul class="signal-list">
+          <li class="signal-item"><span class="mark" aria-hidden="true"></span> Professores participam de formações, mas têm dificuldade de transformar o conteúdo em mudanças reais na prática?</li>
+          <li class="signal-item"><span class="mark" aria-hidden="true"></span> A IA entrou na escola antes de existir uma estratégia pedagógica para utilizá-la?</li>
+          <li class="signal-item"><span class="mark" aria-hidden="true"></span> Os professores têm dificuldade para lidar com diferentes necessidades de aprendizagem e inclusão?</li>
+          <li class="signal-item"><span class="mark" aria-hidden="true"></span> Cada professor trabalha bem, mas de uma maneira completamente diferente?</li>
+          <li class="signal-item"><span class="mark" aria-hidden="true"></span> Os alunos estão pouco engajados?</li>
+        </ul>
+        <p class="dor-closing">Em poucos minutos, o diagnóstico analisa o contexto atual da sua instituição e identifica prioridades para o desenvolvimento da equipe docente.</p>
+      </div>
+    </section>
+
+    <script>
+      (function () {
+        var items = document.querySelectorAll(".signal-item, .dor-closing");
+        var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+        if (reduceMotion || !("IntersectionObserver" in window)) {
+          items.forEach(function (el) { el.classList.add("is-in-view"); });
+          return;
+        }
+
+        // transition-delay is positional against transition-property (opacity,
+        // transform, background, border-color in that order) — background and
+        // border-color always get 0ms so the reveal stagger never bleeds into
+        // the hover feedback afterwards.
+        var signalItems = document.querySelectorAll(".signal-item");
+        signalItems.forEach(function (el, i) {
+          var delay = (i * 80) + "ms";
+          el.style.transitionDelay = delay + ", " + delay + ", 0ms, 0ms";
+        });
+
+        var observer = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("is-in-view");
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.2, rootMargin: "0px 0px -40px 0px" }
+        );
+
+        items.forEach(function (el) { observer.observe(el); });
+      })();
+    </script>
+  </body>
+</html>
